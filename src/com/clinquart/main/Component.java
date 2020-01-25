@@ -1,10 +1,13 @@
 package com.clinquart.main;
 
 import org.lwjgl.LWJGLException;
+
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
+import org.lwjgl.util.glu.GLU;
 
+import static org.lwjgl.opengl.GL11.*;
 public class Component {
 	
 	public boolean running = false;
@@ -23,11 +26,21 @@ public class Component {
 			Display.setFullscreen(false);
 			Display.setTitle(title);
 			Display.create();
+			
+			initGl();
 		} 
 		catch (LWJGLException e) {
 		
 			e.printStackTrace();
 		}
+	}
+	
+	private void initGl() {
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		GLU.gluOrtho2D(0,width, height, 0);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
 	}
 	
 	public void start() {
@@ -53,10 +66,32 @@ public class Component {
 				stop();
 			}
 			Display.update();
+			render();
 			System.out.println(running);
 		}
 		
 		exit();
+	}
+	
+	public void render() {
+		// dessin carre
+		glRectf(64, 64, 32, 32);
+		
+		// dessin caree methode 2
+		int x=16;
+		int y=16;
+		int size=16;
+		glBegin(GL_QUADS);
+		
+		glColor3f(0, 10, 156); //color
+		glVertex2f(x,y);
+		
+		glColor3f(150, 150, 156); //color
+		glVertex2f(x+size,y);
+		
+		glVertex2f(x+size,y+size);
+		glVertex2f(x,y+size);
+		glEnd();
 	}
 	
 	public static void main(String[] args) {
